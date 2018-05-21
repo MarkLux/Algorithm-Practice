@@ -73,19 +73,19 @@ def solve(initial_node):
     open = get_neibors(initial_node)
     # 终止搜索的两个条件：close中包含终点，或open为空
     while len(open) > 0:
-        min_h = 999999
+        min_f = 999999
         next_index = -1
         for i in range(len(open)):
-            # 选取h最小的
+            # 选取f最小的
             next = open[i]
             print 'searching depth = ' + str(next.depth)
             next.print_graph()
-            temp_h = h(next.graph)
-            if temp_h < min_h:
-                min_h = temp_h
+            temp_f = next.depth + 1 + h(next.graph) # f(n) = g(n) + h(n)
+            if temp_f < min_f:
+                min_f = temp_f
                 next_index = i
         if next_index >= 0:
-            if min_h == 0:
+            if h(open[next_index].graph) == 0:
                 close.append(open[next_index])
                 print 'final status arrived'
                 return
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     inital_status = [
         [1,2,3],
         [4,5,0],
-        [7,6,8]
+        [7,8,6]
     ]
     initial_node = Node(inital_status, 0)
     solve(initial_node)
