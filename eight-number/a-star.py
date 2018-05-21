@@ -78,24 +78,33 @@ def solve(initial_node):
         for i in range(len(open)):
             # 选取f最小的
             next = open[i]
-            print 'searching depth = ' + str(next.depth)
-            next.print_graph()
-            temp_f = next.depth + 1 + h(next.graph) # f(n) = g(n) + h(n)
+            temp_f = next.depth + 1 + h(next.graph)  # f(n) = g(n) + h(n)
             if temp_f < min_f:
                 min_f = temp_f
                 next_index = i
         if next_index >= 0:
+            print 'searching depth = ' + str(open[next_index].depth)
+            open[next_index].print_graph()
             if h(open[next_index].graph) == 0:
                 close.append(open[next_index])
                 print 'final status arrived'
                 return
             close.append(open[next_index])
-            open = get_neibors(open[next_index])
+            for neibor in get_neibors(open[next_index]):
+                # 这里要防止重复扩展某个状态
+                is_searched = False
+                for searched in close:
+                    if neibor.graph == searched.graph:
+                        is_searched = True
+                        break
+                if not is_searched:
+                    open.append(neibor)
+            open.pop(next_index)
 
 if __name__ == "__main__":
     inital_status = [
         [1,2,3],
-        [4,5,0],
+        [4,0,5],
         [7,8,6]
     ]
     initial_node = Node(inital_status, 0)
